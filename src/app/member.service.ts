@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class MemberService {
-  private url = 'http://localhost:3000';
+  private url = 'https://rugbyweb.onrender.com';
   members$ = signal<Member[]>([]);
   member$ = signal<Member>({} as Member);
 
