@@ -6,13 +6,12 @@ import { RouterModule } from '@angular/router';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
-import { NgIf, NgFor } from '@angular/common';
+
 
 @Component({
   selector: 'app-members-list',
   standalone: true,
-  imports: [RouterModule, MatTableModule, MatButtonModule,
-     MatCardModule,NgIf, NgFor],
+  imports: [RouterModule, MatTableModule, MatButtonModule, MatCardModule],
   styles: [
     `
       table {
@@ -25,18 +24,24 @@ import { NgIf, NgFor } from '@angular/common';
     `,
   ],
   template: `
-<div *ngIf="members(); let memberList">
-  <div *ngFor="let member of memberList">
-    <h3>{{ member.Name }}</h3>
-    <p>{{ member.role }}</p>
+@if (members(); as memberList) {
+  <div>
+    @for (member of memberList; track member) {
+      <div>
+        <h3>{{ member.Name }}</h3>
+        <p>{{ member.role }}</p>
+      </div>
+    }
   </div>
-</div>
+}
 
 <!-- Show a loader or a message if the data is not yet available -->
-<div *ngIf="!members().length">
-  <p>No members available or still loading...</p>
-</div>
-  `,
+@if (!members().length) {
+  <div>
+    <p>No members available or still loading...</p>
+  </div>
+}
+`,
 })
 export class MemberListComponent implements OnInit {
 members = {} as WritableSignal<Member[]>;
