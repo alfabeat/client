@@ -5,29 +5,46 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class MemberService {
-  private url = 'https://rugbyweb.onrender.com';
+  //private url = 'https://rugbyweb.onrender.com';
+  private url = 'http://localhost:3000/api';
   members$ = signal<Member[]>([]);
   member$ = signal<Member>({} as Member);
 
-  constructor(private http: HttpClient) {
-;
+  constructor(private http: HttpClient) {  }
+  
+
+  private refreshmembers() {
+    this.http.get<Member[]>(`${this.url}/members/`)
+      .subscribe(members => {
+        this.members$.set(members);
+      });
   }
-  getMembers() {
-    this.http.get<Member[]>(`${this.url}/members`).subscribe({
-      next: (members) => this.members$.set(members),
-      error: (err) => console.error('Error fetching members:', err)
-    });
-  }
-  getmember(){
-    this.getMembers();
+
+  getmembers(){
+    this.refreshmembers();
     return this.members$;
   }
 
   getMember(id: string) {
-    this.http.get<Member>(`${this.url}/members/${id}`).subscribe({
-      next: (member) => this.member$.set(member),
+    this.http.get<Member>(`${this.url}/members/getid?id=${id}`).subscribe({
+      next: (member) => {
+        this.member$.set(member);
+        return this.member$();
+      },
       error: (err) => console.error('Error fetching member:', err)
     });
   }
 
+  addMember(member: Member) {
+    return this.http.post<Member>(`${this.url}/members/`, member, { 
+      responseType: 'json'});
+  }
+  updateMember(id: string, member: Member) {
+    return this.http.put(`${this.url}/members/edit?id=${id}`, member, { 
+      responseType: 'json'});
+  }
+  deleteMember(id: string) {
+    return this.http.delete(`${this.url}/members/delete?id=${id}`, { 
+      responseType: 'json'});
+  }
 }

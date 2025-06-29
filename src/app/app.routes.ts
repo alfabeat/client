@@ -4,5 +4,6 @@ import { NavbarComponent } from './navbar/navbar.component';
 
 
 export const routes: Routes = [
-    {path: '', component: NavbarComponent, title: 'NavbarComponent'},
+    {path: 'nav', component: NavbarComponent, title: 'NavbarComponent'},
+    { path: '', component: MemberListComponent, title: 'Member List' }
 ];

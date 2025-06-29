@@ -3,18 +3,21 @@ import { RouterOutlet } from '@angular/router';
 import { MemberListComponent } from './member-list/member-list.component';
 import { NavbarComponent } from './navbar/navbar.component';  
 import { MatToolbarModule } from '@angular/material/toolbar';
-
+ //<app-members-list></app-members-list>
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MatToolbarModule, MemberListComponent, RouterOutlet],
+  imports: [MatToolbarModule, MemberListComponent, RouterOutlet, NavbarComponent],
  
   template: `
-    <mat-toolbar color="primary">
-      <span>Members Management</span>
-    </mat-toolbar>
+
+      <header>
+      <app-navbar></app-navbar>
+      </header>
+    
+  
     <main>
-    <router-outlet></router-outlet>
+   <router-outlet></router-outlet>
     </main>
   `,
   styles: [`
