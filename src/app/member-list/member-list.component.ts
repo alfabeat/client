@@ -16,62 +16,13 @@ import { JsonPipe } from '@angular/common';
   imports: [RouterModule, MatTableModule, MatButtonModule, MatCardModule, NgIf, NgFor, JsonPipe],
   styles: [
     `
-.about-container {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 20px;
-  gap: 20px;
-}
+      table {
+        width: 100%;
 
-/* Main content: 2/3 width */
-.main-content {
-  flex: 2;
-  min-width: 300px;
-}
-
-.about-image {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-.main-content h1 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.main-content p {
-  color: #444;
-  line-height: 1.6;
-}
-
-/* Sidebar: 1/3 width */
-.sidebar {
-  flex: 1;
-  min-width: 250px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.news-card {
-  background-color: #f4f4f4;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
-}
-
-.news-card h3 {
-  margin: 0 0 5px;
-  font-size: 18px;
-}
-
-.news-card p {
-  margin: 0;
-  font-size: 14px;
-  color: #555;
-}
+        button:first-of-type {
+          margin-right: 1rem;
+        }
+      }
     `,
   ],
   template: `
