@@ -21,15 +21,16 @@ import { MatListModule } from '@angular/material/list';
     RouterModule
   ],
   template: `
+
 <mat-toolbar color="primary" class="navbar">
-      <span class="app-title">MyApp</span>
-      <span class="spacer"></span>
-      <span class="nav-links">
-        <span class="nav-item">Home</span>
-        <span class="nav-item">About</span>
-        <span class="nav-item">Contact</span>
-      </span>
-    </mat-toolbar>
+  <span class="app-title">MyApp</span>
+    <span class="spacer"></span>
+  <span class="nav-links">
+    <a routerLink="/" class="nav-item" routerLinkActive="active">About</a>
+    <a routerLink="/member" class="nav-item" routerLinkActive="active">Member List</a>
+    <a routerLink="/event" class="nav-item" routerLinkActive="active">Event</a>
+  </span>
+</mat-toolbar>
   `,
   styles: [`
     .sidenav-container {
