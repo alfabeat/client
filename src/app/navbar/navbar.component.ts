@@ -41,11 +41,11 @@ import { MatListModule } from '@angular/material/list';
       width: 200px;
     }
 
-    .main-content {
+    main-content {
       padding: 16px;
     }
 
-    .app-title {
+    app-title {
       margin-left: 16px;
     }
 
@@ -62,6 +62,8 @@ import { MatListModule } from '@angular/material/list';
       display: flex;
       gap: 16px;
     }
+      ,
+         "src/styles.css",
   `]
 })
 export class NavbarComponent {

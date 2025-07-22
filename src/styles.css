@@ -1,4 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html { height: 100%; }
+
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #b43058;
+  --background-color: #2f76bd;
+  --text-color: #212529;
+}
+
+/* Apply it globally */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color); height: 100%;  margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+main {
+  min-height: calc(100vh - 120px); /* 100vh minus header/footer height */
+  padding: 20px;
+}
+a {
+  color: var(--primary-color);
+}
+
+footer, header {
+  background-color: var(--secondary-color);
+  color: rgb(187, 51, 51);
+}

@@ -1,20 +1,23 @@
 import { Injectable, signal } from '@angular/core';
 import { Event } from './event';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { SessionService } from './session.service';
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
-  private url = 'https://rugbyweb.onrender.com';
- // private url = 'http://localhost:3000/api';
+  //private url = 'https://rugbyweb.onrender.com';
+  private url = 'http://localhost:3000/api';
   events$ = signal<Event[]>([]);
   event$ = signal<Event>({} as Event);
 
   constructor(private http: HttpClient) {  }
-  
+    headers = new HttpHeaders({
+    'X-Session-Token': SessionService.getToken()
+  });
   getData():  Observable<any> {
-    return this.http.get<any>('https://rugbyweb.onrender.com/api/events/').pipe(
+    return this.http.get<any>('http://localhost:3000/api/events/').pipe(
      map(response => response.result), // Adjust based on your API response structure
       );
   }
@@ -24,32 +27,35 @@ export class EventService {
         this.events$.set(events);
       });
   }
+  
+  getevent(id: string) : Observable<Event> {
+    return this.http.get<any>(`${this.url}/events/getid?id=${id}`).pipe( 
+      map(response => response.result) // Adjust based on your API response structure
+      )
 
+    
+
+  }
   getevents(){
     this.refreshevents();
     return this.events$;
   }
 
-  getevent(id: string) {
-    this.http.get<Event>(`${this.url}/events/getid?id=${id}`).subscribe({
-      next: (event) => {
-        this.event$.set(event);
-        return this.event$();
-      },
-      error: (err) => console.error('Error fetching event:', err)
-    });
-  }
+  
 
   addevent(event: Event) {
     return this.http.post<Event>(`${this.url}/events/`, event, { 
+      headers: this.headers,
       responseType: 'json'});
   }
   updateevent(id: string, event: Event) {
     return this.http.put(`${this.url}/events/edit?id=${id}`, event, { 
+      headers: this.headers,
       responseType: 'json'});
   }
   deleteevent(id: string) {
     return this.http.delete(`${this.url}/events/delete?id=${id}`, { 
+      headers: this.headers,
       responseType: 'json'});
   }
 }
