@@ -13,7 +13,8 @@ export class SessionService {
   }
   
   constructor(private http: HttpClient) {}
- private url = 'http://localhost:3000/api';
+ //private url = 'http://localhost:3000/api';
+   private url = 'https://rugbyweb.onrender.com/api';
  headers = new HttpHeaders({
     'Content-Type': 'application/json'
   });
@@ -35,9 +36,9 @@ export class SessionService {
         );
    
     }
-    getToken(): string | null {
+    getToken(): string  {
         const token = this.headers.get('x-access-token');
-        return token ? token : null;
+        return token ? token : '';
     }
 
  

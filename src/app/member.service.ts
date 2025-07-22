@@ -8,15 +8,13 @@ import { SessionService } from './session.service';
 })
 
 export class MemberService {
- // private url = 'https://rugbyweb.onrender.com';
- private url = 'http://localhost:3000/api';
+ private url = 'https://rugbyweb.onrender.com/api';
+// private url = 'http://localhost:3000/api';
   members$ = signal<Member[]>([]);
   member$ = signal<Member>({} as Member);
 
-  constructor(private http: HttpClient) {  }
-  headers = new HttpHeaders({
-    'X-Session-Token': SessionService.getToken()
-  });
+  constructor(private http: HttpClient, private sessionservice :SessionService) {  }
+
   getData():  Observable<any> {
     return this.http.get<any>('http://localhost:3000/api/members/').pipe(
      map(response => response.result), // Adjust based on your API response structure
@@ -31,8 +29,11 @@ export class MemberService {
 
   }
   addMember(member: Member) {
+  var headers = new HttpHeaders({
+    'X-Session-Token': this.sessionservice.getToken()
+  });
     return this.http.post<Member>(`${this.url}/members/`, member, { 
-      headers: this.headers,
+      headers: headers,
       responseType: 'json'
     });
   }
@@ -53,11 +54,17 @@ export class MemberService {
 
 
   updateMember(id: string, member: Member) {
-    return this.http.put(`${this.url}/members/edit?id=${id}`, member, {       headers: this.headers,
+    var headers = new HttpHeaders({
+    'X-Session-Token': this.sessionservice.getToken()
+  });
+    return this.http.put(`${this.url}/members/edit?id=${id}`, member, {       headers: headers,
       responseType: 'json'});
   }
   deleteMember(id: string) {
-    return this.http.delete(`${this.url}/members/delete?id=${id}`, {       headers: this.headers,
+    var headers = new HttpHeaders({
+    'X-Session-Token': this.sessionservice.getToken()
+  });
+    return this.http.delete(`${this.url}/members/delete?id=${id}`, {       headers: headers,
       responseType: 'json'});
   }
 }

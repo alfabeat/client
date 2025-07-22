@@ -7,17 +7,15 @@ import { SessionService } from './session.service';
   providedIn: 'root'
 })
 export class EventService {
-  //private url = 'https://rugbyweb.onrender.com';
-  private url = 'http://localhost:3000/api';
+  private url = 'https://rugbyweb.onrender.com/api';
+  //private url = 'http://localhost:3000/api';
   events$ = signal<Event[]>([]);
   event$ = signal<Event>({} as Event);
 
-  constructor(private http: HttpClient) {  }
-    headers = new HttpHeaders({
-    'X-Session-Token': SessionService.getToken()
-  });
+  constructor(private http: HttpClient , private sessionservice :SessionService) {  }
+
   getData():  Observable<any> {
-    return this.http.get<any>('http://localhost:3000/api/events/').pipe(
+    return this.http.get<any>('https://rugbyweb.onrender.com/api/events/').pipe(
      map(response => response.result), // Adjust based on your API response structure
       );
   }
@@ -29,6 +27,7 @@ export class EventService {
   }
   
   getevent(id: string) : Observable<Event> {
+
     return this.http.get<any>(`${this.url}/events/getid?id=${id}`).pipe( 
       map(response => response.result) // Adjust based on your API response structure
       )
@@ -44,18 +43,27 @@ export class EventService {
   
 
   addevent(event: Event) {
+        var    headers = new HttpHeaders({
+    'X-Session-Token': this.sessionservice.getToken()
+  });
     return this.http.post<Event>(`${this.url}/events/`, event, { 
-      headers: this.headers,
+      headers: headers,
       responseType: 'json'});
   }
   updateevent(id: string, event: Event) {
+        var    headers = new HttpHeaders({
+    'X-Session-Token': this.sessionservice.getToken()
+  });
     return this.http.put(`${this.url}/events/edit?id=${id}`, event, { 
-      headers: this.headers,
+      headers: headers,
       responseType: 'json'});
   }
   deleteevent(id: string) {
+        var    headers = new HttpHeaders({
+    'X-Session-Token': this.sessionservice.getToken()
+  });
     return this.http.delete(`${this.url}/events/delete?id=${id}`, { 
-      headers: this.headers,
+      headers: headers,
       responseType: 'json'});
   }
 }
