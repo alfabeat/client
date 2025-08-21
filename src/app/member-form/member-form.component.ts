@@ -8,8 +8,9 @@ import { Member } from '../member';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MemberService } from '../member.service';  
+import { logged } from '../session.service';
 // <mat-label>Select a date</mat-label>
 //   <input
 //     matInput
@@ -19,17 +20,22 @@ import { MemberService } from '../member.service';
 //   />
 //   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 //   <mat-datepicker #picker></mat-datepicker>
-// </mat-form-field>
-@Component({
+ 
+@Component({//todo: add renewal  viewing merchandise page
+  
+
+  //display event on about
   selector: 'app-member-form',
-  imports: [  ReactiveFormsModule,
+  imports: [
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
-    MatButtonModule, MatDatepickerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatNativeDateModule, FormsModule,],
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    FormsModule,
+  ],
   template: `
  <form
       class="member-form"
@@ -37,6 +43,10 @@ import { MemberService } from '../member.service';
       [formGroup]="memberForm"
       (submit)="submitForm()"
     >
+
+
+
+<p>You selected: {{ member.Name }}</p>
       <mat-form-field>
         <mat-label>Name</mat-label>
         <input matInput placeholder="Name" formControlName="Name" required />
@@ -45,9 +55,6 @@ import { MemberService } from '../member.service';
         }
       </mat-form-field>
   
-
-
-<p>You selected: {{ member.Name }}</p>
       <mat-form-field>
         <mat-label>email</mat-label>
         <input
@@ -60,7 +67,18 @@ import { MemberService } from '../member.service';
         <mat-error>email must be at least 5 characters long.</mat-error>
         }
       </mat-form-field>
-
+      <mat-form-field>
+        <mat-label>team</mat-label>
+        <input
+          matInput
+          placeholder="team"
+          formControlName="team"
+          required
+        />
+        @if (team.invalid) {
+        <mat-error>team must be at least 5 characters long.</mat-error>
+        }
+      </mat-form-field>
       <mat-radio-group formControlName="role" aria-label="Select an option">
         <mat-radio-button name="role" value="member" required 
           >member</mat-radio-button
@@ -76,12 +94,22 @@ import { MemberService } from '../member.service';
         color="primary"
         type="submit"
         [disabled]="memberForm.invalid"
+        (click)="editEvent(member._id)"
       >
-        Add
-      </button>
-    </form>
+        Edit
+      </button>   
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="memberForm.invalid"
+        (click)="deleteEvent(member._id)"
+      >
+        Delete
+      </button>   
   `,
-  styles: `    member-form {
+  styles: `
+    .member-details {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -92,22 +120,27 @@ import { MemberService } from '../member.service';
     }
     mat-mdc-form-field {
       width: 100%;
-    }`
+    }
+  `
 })
 export class MemberFormComponent {
-  selectedDate: Date | null = null;    
+  
  route = inject(ActivatedRoute);
- onDateChange(event: any): void {
-    this.selectedDate = event.value;
-    console.log('Date selected:', this.selectedDate);
-  }
+
   members : Member[] = [];
   member : Member = {} as Member;
 
-
   ngOnInit(): void {
+   if ( !this.logger.getloggedin()){
+    console.log('User not logged in, redirecting to login page',this.logger.getloggedin());
+    this.router.navigate(['/login']);
+   }
   const id = String(this.route.snapshot.paramMap.get('id'));
-    this.getid(id);
+   
+      this.membersService.getMember(id).subscribe((response) => {
+      this.member  = response;
+      console.log('Data fetched:', this.member );
+  });
   }
   getid(id: string) {
     this.membersService.getMember(id).subscribe((response)=>{
@@ -119,49 +152,39 @@ export class MemberFormComponent {
       }
     });
   }
-  addEvent() {
-    // Implement add member logic here
-    this.member.MemberId = '3'; // Example ID
-    this.member.Name = 'New Member'; 
-    this.member.role = 'member'; // Default role
-    this.member.team = 'default-team'; // Default team
-    this.member.email = "will@gmail.com"
-    this.membersService.addMember(this.member).subscribe({
-      next: () => {
-        console.log('Member added successfully');
-       // this.membersService.getmembers(); // Refresh the member list
-      },
-      error: (error) => {
-        alert('Failed to create member');
-        console.error(error);
-      },
-    });
-    console.log('Add event triggered');
-  }
 
-  editEvent() {
+
+  editEvent(id: string | undefined) {
     // Implement edit member logic here
-    this.member.MemberId = '3'; // Example ID
-    this.member.Name = 'Member'; 
-    this.member.role = 'member'; // Default role
-    this.member.team = 'default-team'; // Default team
-    this.member.email = "will@gmail.com"
-    this.membersService.updateMember("685f4014420f9ca53547fc60", this.member).subscribe({
-      next: () => {
-        console.log('Member updated successfully');
-        // this.membersService.getmembers(); // Refresh the member list
-      },
-      error: (error) => {
-        alert('Failed to update member');
-        console.error(error);
-      },
-    });
-    console.log('Edit event triggered for:', );
+
+    this.member.Name = this.Name.value;
+    this.member.role = this.role.value; // Default role
+    this.member.team = this.team.value; // Default team
+    this.member.email = this.email.value;
+    if (typeof id === 'string') {
+      this.membersService.updateMember(id, this.member).subscribe({
+        next: () => {
+          console.log('Member updated successfully');
+          // this.membersService.getmembers(); // Refresh the member list
+        },
+        error: (error) => {
+          alert('Failed to update member');
+
+          console.error(error);
+        },
+      });
+      console.log('Edit event triggered for:', id);
+    } else {
+      alert('Invalid member ID');
+      console.error('Edit event triggered with invalid ID:', id);
+    }
   }
 
-  deleteEvent() {
+
+  deleteEvent(id: string | undefined) {
     // Implement delete member logic here
-    this.membersService.deleteMember("685f4014420f9ca53547fc60").subscribe({
+      if (typeof id === 'string') {
+    this.membersService.deleteMember(id).subscribe({
       next: () => {
         console.log('Member delete successfully');
         // this.membersService.getmembers(); // Refresh the member list
@@ -173,10 +196,11 @@ export class MemberFormComponent {
     });
     console.log('Delete event triggered for:', );
   }
+  }
 
   getEventId() {
     // Implement get member ID logic here
-    this.getid("685f4014420f9ca53547fc60");
+    this.getid("id");
     console.log('Get ID event triggered for:', );
   }
  initialState = input<Member>();
@@ -189,11 +213,12 @@ export class MemberFormComponent {
 
   memberForm: any;
 
-  constructor(private formBuilder: FormBuilder, private eventsService: MemberService, private membersService: MemberService) {
+  constructor(private formBuilder: FormBuilder,private logger: logged,   private membersService: MemberService,private router: Router) {
     this.memberForm = this.formBuilder.group({
       Name: ['', [Validators.required, Validators.minLength(3)]],
       role: ['member', [Validators.required]],
       email: ['', [Validators.required, Validators.minLength(5)]],
+      team: ['', [Validators.required, Validators.minLength(5)]],
     });
 
     effect(() => {
@@ -201,6 +226,7 @@ export class MemberFormComponent {
         Name: this.initialState()?.Name || '',
         role: this.initialState()?.role || 'member',
         email: this.initialState()?.email || '',
+        team: this.initialState()?.team || '',
       });
     });
   }
@@ -213,6 +239,9 @@ export class MemberFormComponent {
   }
   get email() {
     return this.memberForm.get('email')!;
+  }
+    get team() {
+    return this.memberForm.get('team')!;
   }
 
   submitForm() {

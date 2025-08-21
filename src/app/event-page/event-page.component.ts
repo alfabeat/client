@@ -20,11 +20,12 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatNativeDateModule,],
   template: `
   <mat-card class="class-card" (click)="selectEvent(eventItem)" *ngFor="let eventItem of events">
-  <mat-card-title>{{ eventItem.title }}</mat-card-title>
-  <mat-card-content>
-    disc: <br />
-   
+  <mat-card-title><p><strong>Title:</strong> {{ eventItem.title }}</p>
+  <p><strong>Created By:</strong> {{ eventItem.createdBy }}</p></mat-card-title>
+    <mat-card-content><p><strong>Description:</strong> {{ eventItem.description }}</p>
   </mat-card-content>
+  <hr />
+
 </mat-card>
 
 
@@ -64,6 +65,8 @@ export class EventPageComponent implements OnInit {
     this.router.navigate(['/events', this.selectedevent._id]);
   }
 
+
+   
 }
 //   ngOnInit(): void {
 //   this.fetchmembers();

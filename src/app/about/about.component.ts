@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SessionService } from '../session.service';
+
 
 @Component({
   selector: 'app-about',
@@ -143,9 +143,9 @@ import { SessionService } from '../session.service';
          "src/styles.css"`
 })
 export class AboutComponent {
-   constructor(private SessionService: SessionService,) {}
+   constructor() {}
   ngOnInit(): void {
- this.SessionService.login();
+
   };
 articles = [
     {

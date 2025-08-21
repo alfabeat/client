@@ -35,10 +35,7 @@ import { get } from 'http';
     <mat-card-content><p><strong>Role:</strong> {{ member.role }}</p>
   <p><strong>Team:</strong> {{ member.team }}</p>  </mat-card-content>
   <hr />
-  <button mat-raised-button color="primary" (click)="addEvent()">Add</button>
-  <button mat-raised-button color="accent" (click)="editEvent()">Edit</button>
-  <button mat-raised-button color="warn" (click)="deleteEvent()">Delete</button>
-  <button mat-raised-button (click)="getEventId()">Get ID</button>
+
 </mat-card>
 `,
 })
@@ -70,64 +67,64 @@ export class MemberListComponent implements OnInit {
       }
     });
   }
-  addEvent() {
-    // Implement add member logic here
-    this.member.MemberId = '3'; // Example ID
-    this.member.Name = 'New Member'; 
-    this.member.role = 'member'; // Default role
-    this.member.team = 'default-team'; // Default team
-    this.member.email = "will@gmail.com"
-    this.membersService.addMember(this.member).subscribe({
-      next: () => {
-        console.log('Member added successfully');
-       // this.membersService.getmembers(); // Refresh the member list
-      },
-      error: (error) => {
-        alert('Failed to create member');
-        console.error(error);
-      },
-    });
-    console.log('Add event triggered');
-  }
+  // addEvent() {
+  //   // Implement add member logic here
+  //   this.member.MemberId = '3'; // Example ID
+  //   this.member.Name = 'New Member'; 
+  //   this.member.role = 'member'; // Default role
+  //   this.member.team = 'default-team'; // Default team
+  //   this.member.email = "will@gmail.com"
+  //   this.membersService.addMember(this.member).subscribe({
+  //     next: () => {
+  //       console.log('Member added successfully');
+  //      // this.membersService.getmembers(); // Refresh the member list
+  //     },
+  //     error: (error) => {
+  //       alert('Failed to create member');
+  //       console.error(error);
+  //     },
+  //   });
+  //   console.log('Add event triggered');
+  // }
 
-  editEvent() {
-    // Implement edit member logic here
-    this.member.MemberId = '3'; // Example ID
-    this.member.Name = 'Member'; 
-    this.member.role = 'member'; // Default role
-    this.member.team = 'default-team'; // Default team
-    this.member.email = "will@gmail.com"
-    this.membersService.updateMember("685f4014420f9ca53547fc60", this.member).subscribe({
-      next: () => {
-        console.log('Member updated successfully');
-        // this.membersService.getmembers(); // Refresh the member list
-      },
-      error: (error) => {
-        alert('Failed to update member');
-        console.error(error);
-      },
-    });
-    console.log('Edit event triggered for:', );
-  }
+  // editEvent() {
+  //   // Implement edit member logic here
+  //   this.member.MemberId = '3'; // Example ID
+  //   this.member.Name = 'Member'; 
+  //   this.member.role = 'member'; // Default role
+  //   this.member.team = 'default-team'; // Default team
+  //   this.member.email = "will@gmail.com"
+  //   this.membersService.updateMember("685f4014420f9ca53547fc60", this.member).subscribe({
+  //     next: () => {
+  //       console.log('Member updated successfully');
+  //       // this.membersService.getmembers(); // Refresh the member list
+  //     },
+  //     error: (error) => {
+  //       alert('Failed to update member');
+  //       console.error(error);
+  //     },
+  //   });
+  //   console.log('Edit event triggered for:', );
+  // }
 
-  deleteEvent() {
-    // Implement delete member logic here
-    this.membersService.deleteMember("685f4014420f9ca53547fc60").subscribe({
-      next: () => {
-        console.log('Member delete successfully');
-        // this.membersService.getmembers(); // Refresh the member list
-      },
-      error: (error) => {
-        alert('Failed to delete member');
-        console.error(error);
-      },
-    });
-    console.log('Delete event triggered for:', );
-  }
+  // deleteEvent() {
+  //   // Implement delete member logic here
+  //   this.membersService.deleteMember("685f4014420f9ca53547fc60").subscribe({
+  //     next: () => {
+  //       console.log('Member delete successfully');
+  //       // this.membersService.getmembers(); // Refresh the member list
+  //     },
+  //     error: (error) => {
+  //       alert('Failed to delete member');
+  //       console.error(error);
+  //     },
+  //   });
+  //   console.log('Delete event triggered for:', );
+  // }
 
   getEventId() {
     // Implement get member ID logic here
-    this.getid("685f4014420f9ca53547fc60");
+    this.getid("6861d62775e02c4a96d38690");
     console.log('Get ID event triggered for:', );
   }
 }

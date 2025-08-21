@@ -1,6 +1,6 @@
-import { Component ,inject,} from '@angular/core';
+import { Component ,effect,EventEmitter,inject, input, Output,} from '@angular/core';
 import { EventService } from '../event.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
@@ -12,6 +12,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router'
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { create } from 'domain';
+import { start } from 'repl';
+import { MatRadioModule } from '@angular/material/radio';
+import { logged } from '../session.service';
 //     <mat-form-field appearance="fill">
 //   <mat-label>Select a date</mat-label>
 //   <input
@@ -27,19 +32,97 @@ import { ActivatedRoute } from '@angular/router'
 // </mat-form-field>
 @Component({
   selector: 'app-form-event',
-  imports: [RouterModule, MatTableModule, MatButtonModule,   NgIf, NgFor,  MatFormFieldModule,
+  imports: [    ReactiveFormsModule,
+    MatFormFieldModule,
     MatInputModule,
-    MatNativeDateModule],
+    MatRadioModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    FormsModule,],
   template: `
-    <p>
-You selected: {{ eventdata.title }}<br />
-  <button mat-raised-button color="primary" (click)="addEvent()">Add</button>
-  <button mat-raised-button color="accent" (click)="editEvent()">Edit</button>
-  <button mat-raised-button color="warn" (click)="deleteEvent()">Delete</button>
-  <button mat-raised-button (click)="getEventId()">Get ID</button>
-    </p>
+ <form
+      class="Event-form"
+      autocomplete="off"
+      [formGroup]="EventForm"
+      (submit)="submitForm()"
+    >
+
+<p>You selected: {{ eventdata.title }}</p>
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput placeholder="Title" formControlName="title" required />
+        @if (title.invalid) {
+        <mat-error>Title must be at least 3 characters long.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <input matInput placeholder="Description" formControlName="description" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Created By</mat-label>
+        <input matInput placeholder="Created By" formControlName="createdBy" required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="start" required />
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endPicker" formControlName="end" required />
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+      <mat-radio-group formControlName="allDay" aria-label="Select an option">
+        <mat-radio-button name="allDay" value="false" required 
+          >Is not all day</mat-radio-button
+        >
+        <mat-radio-button name="allDay" value="true"
+          >Is all day</mat-radio-button
+        >
+     
+      </mat-radio-group>
+      <br />
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="EventForm.invalid"
+        (click)="editEvent(eventdata._id)"
+      >
+        Edit
+      </button>   
+      <button
+        mat-raised-button
+        color="warn"
+        type="button"
+        [disabled]="EventForm.invalid"
+        (click)="deleteEvent(eventdata._id)"
+      >
+        Delete
+      </button>    
   `,
-  styles: ``
+  styles: `
+    .Event-form {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem;
+    }
+    mat-mdc-radio-button ~ .mat-mdc-radio-button {
+      margin-left: 16px;
+    }
+    mat-mdc-form-field {
+      width: 100%;
+    }`
 })
 export class FormEventComponent {
  selectedDate: Date | null = null;    
@@ -50,9 +133,12 @@ export class FormEventComponent {
   }
   events : Event[] = [];
 eventdata: Event = {} as Event;
- constructor(private eventsService: EventService) {}
+
 
   ngOnInit(): void {
+       if ( !this.logger.getloggedin()){
+    this.router.navigate(['/login']);
+   }
   const id = String(this.route.snapshot.paramMap.get('id'));
     this.getid(id);
   }
@@ -67,57 +153,41 @@ eventdata: Event = {} as Event;
     });
   }
 
-  addEvent() {
-    // Implement add member logic here
-    this.eventdata = {
-      title: 'New Event',
-      start: new Date(),
-      end: new Date(),
-      allDay: false,
-      createdBy: 'admin',
-      description: 'This is a new event'
-    };
-    this.eventsService.addevent(this.eventdata).subscribe({
-      next: () => {
-        console.log('Member added successfully');
-       // this.membersService.getmembers(); // Refresh the member list
-      },
-      error: (error) => {
-        alert('Failed to create member');
-        console.error(error);
-      },
-    });
-    console.log('Add event triggered');
+
+  editEvent(id: string | undefined) {
+    // Implement edit events logic here
+    this.eventdata.title = this.title.value;
+    this.eventdata.title = this.title.value;
+    this.eventdata.description = this.description.value;
+    this.eventdata.allDay = this.allDay.value;
+    this.eventdata.start = this.start.value;
+    this.eventdata.end = this.end.value;
+
+    if (typeof id === 'string') {
+      this.eventsService.updateevent(id, this.eventdata).subscribe({
+        next: () => {
+          console.log('event updated successfully');
+          // this.membersService.getmembers(); // Refresh the member list
+        },
+        error: (error) => {
+          alert('Failed to update member');
+          console.error(error);
+        },
+      });
+      console.log('Edit event triggered for:', id);
+    } else {
+      alert('Invalid member ID');
+      console.error('Edit event triggered with invalid ID:', id);
+    }
   }
 
-  editEvent() {
-    // Implement edit member logic here
-      this.eventdata = {
-      title: 'Event',
-      start: new Date(),
-      end: new Date(),
-      allDay: false,
-      createdBy: 'admin',
-      description: 'This is a new event'
-    };
-    this.eventsService.updateevent("687aeb92037d60988b558d28", this.eventdata).subscribe({
-      next: () => {
-        console.log('event updated successfully');
-        // this.membersService.getmembers(); // Refresh the member list
-      },
-      error: (error) => {
-        alert('Failed to update event');
-        console.error(error);
-      },
-    });
-    console.log('Edit event triggered for:', );
-  }
 
-  deleteEvent() {
+  deleteEvent(id: string | undefined) {
     // Implement delete member logic here
-    this.eventsService.deleteevent("687aeb92037d60988b558d28").subscribe({
+      if (typeof id === 'string') {
+    this.eventsService.deleteevent(id).subscribe({
       next: () => {
-        console.log('Member delete successfully');
+        console.log('event delete successfully');
         // this.membersService.getmembers(); // Refresh the member list
       },
       error: (error) => {
@@ -127,11 +197,66 @@ eventdata: Event = {} as Event;
     });
     console.log('Delete event triggered for:', );
   }
+  }
 
   getEventId() {
     // Implement get member ID logic here
-    this.getid("687aeb92037d60988b558d28");
+    this.getid("id");
     console.log('Get ID event triggered for:', );
   }
+ initialState = input<Event>();
 
+  @Output()
+  formValuesChanged = new EventEmitter<Event>();
+
+  @Output()
+  formSubmitted = new EventEmitter<Event>();
+
+   EventForm: any;
+
+  constructor(private formBuilder: FormBuilder,private logger: logged, private eventsService: EventService,private router: Router) {
+    this.EventForm = this.formBuilder.group({
+      title: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required]],
+      createdBy: ['', [Validators.required]], 
+      start: [new Date(), [Validators.required]],
+      end: [new Date(), [Validators.required]],
+      allDay: [false, [Validators.required]],
+    });
+
+    effect(() => {
+      this.EventForm.setValue({
+        title: this.initialState()?.title || '',
+        allDay: this.initialState()?.allDay || false,
+        description: this.initialState()?.description || '',
+        createdBy: this.initialState()?.createdBy || '',
+        start: this.initialState()?.start || new Date(),
+        end: this.initialState()?.end || new Date(),
+
+      });
+    });
+  }
+
+  get title() {
+    return this.EventForm.get('title')!;
+  }
+  get description() {
+    return this.EventForm.get('description')!;
+  }
+  get allDay() {
+    return this.EventForm.get('allDay')!;
+  }
+  get start() {
+    return this.EventForm.get('start')!;
+  }
+  get end() {
+    return this.EventForm.get('end')!;
+  }
+  get createdBy() {
+    return this.EventForm.get('createdBy')!;
+  }
+
+  submitForm() {
+    this.formSubmitted.emit(this.EventForm.value as Event);
+  }
 }
