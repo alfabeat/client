@@ -37,6 +37,10 @@
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
+        "prerender": {
+            "builder": "@angular-devkit/build-angular:prerender",
+            "options": {
+              "routes": [   ]  }},
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
