@@ -144,7 +144,8 @@ eventdata: Event = {} as Event;
   }
   getid(id: string) {
     this.eventsService.getevent(id).subscribe((response)=>{
-   this.eventdata = response;
+  // this.eventdata = response;
+   this.eventdata = Array.isArray(response) ? response[0] : response;
       console.log('event fetched:', this.eventdata._id);
       error: (err: any) => {
         console.error('Error fetching member:', err);
@@ -152,9 +153,30 @@ eventdata: Event = {} as Event;
       }
     });
   }
+ addmember() {
+    this.eventdata.title = this.title.value;
+    this.eventdata.title = this.title.value;
+    this.eventdata.description = this.description.value;
+    this.eventdata.allDay = this.allDay.value;
+    this.eventdata.start = this.start.value;
+    this.eventdata.end = this.end.value;
+    this.eventsService.addevent( this.eventdata).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        alert('Failed to create member');
+        console.error(error);
+      },
+    });
+ 
+  }
 
-
-  editEvent(id: string | undefined) {
+  editEvent(id: string |number| undefined) {
+       if (typeof id === 'number') {
+      id = id.toString();
+      console.log('Converted id to string:', id);
+    }
     // Implement edit events logic here
     this.eventdata.title = this.title.value;
     this.eventdata.title = this.title.value;
@@ -170,7 +192,7 @@ eventdata: Event = {} as Event;
           // this.membersService.getmembers(); // Refresh the member list
         },
         error: (error) => {
-          alert('Failed to update member');
+          alert('Failed to update event');
           console.error(error);
         },
       });
@@ -182,8 +204,11 @@ eventdata: Event = {} as Event;
   }
 
 
-  deleteEvent(id: string | undefined) {
+  deleteEvent(id: string|number | undefined) {
     // Implement delete member logic here
+       if (typeof id === 'number') {
+      id = id.toString();
+    }
       if (typeof id === 'string') {
     this.eventsService.deleteevent(id).subscribe({
       next: () => {

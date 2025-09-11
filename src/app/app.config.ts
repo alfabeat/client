@@ -20,8 +20,15 @@ export function setToken(newToken: string) {
 
 export function authInterceptorFn(req: HttpRequest<any>, next: HttpHandlerFn) {
   const authReq = token
-  ? req.clone({ setHeaders: { 'x-access-token': token }
+  ? req.clone({ setHeaders: {  Authorization: `Bearer ${token}`  }
   })
   : req;
   return next(authReq);
 }
+// export function authInterceptorFn(req: HttpRequest<any>, next: HttpHandlerFn) {
+//   const authReq = token
+//   ? req.clone({ setHeaders: { 'x-access-token': token }
+//   })
+//   : req;
+//   return next(authReq);
+// }

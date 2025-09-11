@@ -40,18 +40,39 @@ export class logged{
 @Injectable({
   providedIn: 'root'
 })
+// export class sessionService {
+// // private url = 'https://rugbyweb.onrender.com/api';
+
+//  private url = 'http://localhost:3000/api';
+// //   private url = 'https://rugbyweb.onrender.com/api';
+//   token : string = ""
+//   constructor(private http: HttpClient, private logged: logged) {  }
+//   gettoken(logindetails: login) {
+//   this.http.post<any>(`${this.url}/session/login`,logindetails,{responseType: 'json'})  
+//       .subscribe(response => {
+//         this.token = response.token;
+//         if (response.token) {
+//           this.logged.setloggedintrue();
+//         }else {
+//           this.logged.setloggedinfalse();
+//         }
+//         console.log('Token received:', this.token);
+//         console.log('Logged in status:', this.logged.getloggedin());
+//         setToken(this.token);
+//       });
+//   }
 export class sessionService {
 // private url = 'https://rugbyweb.onrender.com/api';
 
-// private url = 'http://localhost:3000/api';
-   private url = 'https://rugbyweb.onrender.com/api';
+ private url = 'http://localhost:8000/api';
+//   private url = 'https://rugbyweb.onrender.com/api';
   token : string = ""
   constructor(private http: HttpClient, private logged: logged) {  }
   gettoken(logindetails: login) {
-  this.http.post<any>(`${this.url}/session/login`,logindetails,{responseType: 'json'})  
+  this.http.post<any>(`${this.url}/token/`,logindetails,{responseType: 'json'})  
       .subscribe(response => {
-        this.token = response.token;
-        if (response.token) {
+        this.token = response.access;
+        if (response.access) {
           this.logged.setloggedintrue();
         }else {
           this.logged.setloggedinfalse();
@@ -61,7 +82,6 @@ export class sessionService {
         setToken(this.token);
       });
   }
-
 //  
 
 }

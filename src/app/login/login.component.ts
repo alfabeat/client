@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -85,7 +86,11 @@ logindetails: login = {} as login;
       this.session.gettoken(this.logindetails)
       // Handle token storage here if needed
       // After successful login, go back to previous page
-      this.location.back();
+      
+     timer(100).subscribe(() => {
+    this.location.back();
+    });
+     
   
 
       console.log('Edit event triggered for:');

@@ -107,6 +107,15 @@ import { logged } from '../session.service';
       >
         Delete
       </button>   
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="memberForm.invalid"
+        (click)="addmember()"
+      >
+        Add
+      </button>  
   `,
   styles: `
     .member-details {
@@ -144,7 +153,8 @@ export class MemberFormComponent {
   }
   getid(id: string) {
     this.membersService.getMember(id).subscribe((response)=>{
-   this.member = response; 
+  // this.member = response; 
+   this.member = Array.isArray(response) ? response[0] : response;
       console.log('Member fetched:', this.member);
       error: (err: any) => {
         console.error('Error fetching member:', err);
@@ -154,13 +164,16 @@ export class MemberFormComponent {
   }
 
 
-  editEvent(id: string | undefined) {
+  editEvent(id: string | number | undefined) {
     // Implement edit member logic here
-
+    if (typeof id === 'number') {
+      id = id.toString();
+    }
     this.member.Name = this.Name.value;
     this.member.role = this.role.value; // Default role
     this.member.team = this.team.value; // Default team
     this.member.email = this.email.value;
+    
     if (typeof id === 'string') {
       this.membersService.updateMember(id, this.member).subscribe({
         next: () => {
@@ -180,9 +193,27 @@ export class MemberFormComponent {
     }
   }
 
-
-  deleteEvent(id: string | undefined) {
+ addmember() {
+     this.member.Name = this.Name.value;
+    this.member.role = this.role.value; // Default role
+    this.member.team = this.team.value; // Default team
+    this.member.email = this.email.value;
+    this.membersService.addMember( this.member).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        alert('Failed to create member');
+        console.error(error);
+      },
+    });
+ 
+  }
+  deleteEvent(id: string | number | undefined) {
     // Implement delete member logic here
+        if (typeof id === 'number') {
+      id = id.toString();
+    }
       if (typeof id === 'string') {
     this.membersService.deleteMember(id).subscribe({
       next: () => {

@@ -8,31 +8,33 @@ import { Observable, map } from 'rxjs';
 })
 
 export class MemberService {
- private url = 'https://rugbyweb.onrender.com/api';
+// private url = 'https://rugbyweb.onrender.com/api';
 // private url = 'http://localhost:3000/api';
+   private url =  'http://localhost:8000/api';
   members$ = signal<Member[]>([]);
   member$ = signal<Member>({} as Member);
 
   constructor(private http: HttpClient) {  }
 
   getData():  Observable<any> {
-    return this.http.get<any>('http://localhost:3000/api/members/').pipe(
-     map(response => response.result), // Adjust based on your API response structure
+    return this.http.get<any>('http://localhost:8000/api/members/').pipe(
+     map(response => response), // Adjust based on your API response structure
+       // map(response => response.result)
       );
   }
   
   getMember(id: string) : Observable<Member> {
     return this.http.get<any>(`${this.url}/members/getid?id=${id}`,).pipe(
-      map(response => response.result)
-
+      map(response => response),
+ 
+    // map(response => response.result)
     )
-
   }
   addMember(member: Member) {
 
     return this.http.post<Member>(`${this.url}/members/`, member, { 
    
-      responseType: 'json'
+    
     });
   }
 
@@ -55,11 +57,11 @@ export class MemberService {
  
   console.log('Updating member with ID:',);
     return this.http.put(`${this.url}/members/edit?id=${id}`, member, {      
-      responseType: 'json'});
+    });
   }
   deleteMember(id: string) {
    
     return this.http.delete(`${this.url}/members/delete?id=${id}`, {       
-      responseType: 'json'});
+   });
   }
 }

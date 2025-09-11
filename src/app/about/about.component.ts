@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { EventPageComponent } from '../event-page/event-page.component';
 
 
 @Component({
   selector: 'app-about',
-  imports: [],
+  imports: [EventPageComponent],
   template: `
 <div class="about-container">
   <!-- Main Content with Carousel -->
@@ -27,18 +28,7 @@ import { Component } from '@angular/core';
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="news-card">
-      <h3>Event 1</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    </div>
-    <div class="news-card">
-      <h3>Event 2</h3>
-      <p>Pellentesque dapibus efficitur laoreet. Nam risus ante.</p>
-    </div>
-    <div class="news-card">
-      <h3>Event 3</h3>
-      <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    </div>
+    <app-event-page></app-event-page>
   </div>
 </div>
   `,
@@ -122,12 +112,7 @@ import { Component } from '@angular/core';
   gap: 15px;
 }
 
-.news-card {
-  background-color: #f4f4f4;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
-}
+
 
 .news-card h3 {
   margin: 0 0 5px;

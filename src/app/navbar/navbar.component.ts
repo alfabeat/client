@@ -22,8 +22,8 @@ import { MatListModule } from '@angular/material/list';
   ],
   template: `
 
-<mat-toolbar color="primary" class="navbar">
-  <span class="app-title">MyApp</span>
+<mat-toolbar  class="navbar">
+  <span class="app-title">RugbyClub website</span>
     <span class="spacer"></span>
   <span class="nav-links">
     <a routerLink="/" class="nav-item" routerLinkActive="active">About</a>
@@ -52,6 +52,7 @@ import { MatListModule } from '@angular/material/list';
     .navbar {
       display: flex;
       align-items: center;
+      background-color: #3f51b5;
     }
 
     .spacer {
