@@ -2,6 +2,7 @@ import { Component, effect, EventEmitter, Output } from '@angular/core';
 import { login } from '../login';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { sessionService } from '../session.service';
+import { logged } from '../session.service';  
 import { Location } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -88,13 +89,18 @@ logindetails: login = {} as login;
       // After successful login, go back to previous page
       
      timer(100).subscribe(() => {
-    this.location.back();
+      timer(500).subscribe(() => {
+      if (this.logger.getloggedin() == true) {
+        console.log('Login successful');
+        this.location.back();
+      }else{
+        alert('Login failed, please try again.');
+      }
+      
+    });  
     });
      
   
-
-      console.log('Edit event triggered for:');
-     
   
 
   }
@@ -107,7 +113,7 @@ logindetails: login = {} as login;
 
   loginForm: any;
 
-  constructor(private formBuilder: FormBuilder, private session: sessionService,private location: Location) {
+  constructor(private formBuilder: FormBuilder, private session: sessionService,private logger: logged,private location: Location) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required]],
