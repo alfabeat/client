@@ -163,9 +163,10 @@ eventdata: Event = {} as Event;
     });
   }
  addevent() {
-    this.eventdata.title = this.title.value;
+  
     this.eventdata.title = this.title.value;
     this.eventdata.description = this.description.value;
+    this.eventdata.createdBy = this.createdBy.value;
     this.eventdata.allDay = this.allDay.value;
     this.eventdata.start = this.start.value;
     this.eventdata.end = this.end.value;
@@ -187,9 +188,10 @@ eventdata: Event = {} as Event;
       console.log('Converted id to string:', id);
     }
     // Implement edit events logic here
-    this.eventdata.title = this.title.value;
+
     this.eventdata.title = this.title.value;
     this.eventdata.description = this.description.value;
+    this.eventdata.createdBy = this.createdBy.value;
     this.eventdata.allDay = this.allDay.value;
     this.eventdata.start = this.start.value;
     this.eventdata.end = this.end.value;
