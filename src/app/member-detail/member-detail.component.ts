@@ -33,7 +33,6 @@ import e from 'express';
       <button mat-raised-button color="primary" (click)="gotoaddEvent(member._id)">Add</button>
       <button mat-raised-button color="accent" (click)="gotoeditEvent(member._id)">Edit</button>
 
-      <button mat-raised-button (click)="getEventId()">Get ID</button>
     </div>
   `,
   styles: `    
@@ -65,28 +64,27 @@ export class MemberDetailComponent {
 
   ngOnInit(): void {
   const id = String(this.route.snapshot.paramMap.get('id'));
-   
-      this.membersService.getMember(id).subscribe((response) => {
-      this.member  = response;
-      console.log('Data fetched:', this.member );
+    this.membersService.getMember(id).subscribe({
+    next: (response) => {
+      this.member = Array.isArray(response) ? response[0] : response; // Direct assignment
+      console.log('me fetched:', this.member._id);
+    },
+    error: (err) => {
+      console.error('Error fetching me:', err);
+      alert('Failed to fetch member');
+    }
   });
+  //     this.membersService.getMember(id).subscribe((response) => {
+  //     this.member  = response;
+  //     console.log('me fetched:', this.member );
+  // });
   }
-  getid(id: string) {
-    this.membersService.getMember(id).subscribe((response)=>{
-   this.member = response; 
-      console.log('Member fetched:', this.member);
-      error: (err: any) => {
-        console.error('Error fetching member:', err);
-        alert('Failed to fetch member');
-      }
-    });
-  }
-  gotoaddEvent(id: string | undefined) {
+
+  gotoaddEvent(id: number | string | undefined) {
     // Navigate to add member page
-
-  
-
-    
+   if (typeof id === 'number') {
+      id = id.toString();
+    }
     if (typeof id === 'string') {
     this.router.navigate(['/members', id, 'add']);
     } else {
@@ -96,9 +94,11 @@ export class MemberDetailComponent {
     console.log('Add event triggered for:', id);
   
   }
-  gotoeditEvent(id: string | undefined) {
+  gotoeditEvent(id: string |number| undefined) {
     // Navigate to edit member page
-    
+       if (typeof id === 'number') {
+      id = id.toString();
+    }
     if (typeof id === 'string') {
       this.router.navigate(['/members', id, 'edit']);
     } else {
@@ -109,10 +109,5 @@ export class MemberDetailComponent {
    
   }
 
-  getEventId() {
-    // Implement get member ID logic here
-    this.getid("id");
-    console.log('Get ID event triggered for:', );
-  }
  initialState = input<Member>();
 }

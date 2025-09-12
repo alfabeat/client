@@ -1,13 +1,15 @@
 import { Component, effect, EventEmitter, Output } from '@angular/core';
 import { login } from '../login';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { logged, sessionService } from '../session.service';
+import { sessionService } from '../session.service';
+import { logged } from '../session.service';  
 import { Location } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { timer } from 'rxjs';
+
 
 @Component({
   selector: 'app-login',
@@ -20,6 +22,7 @@ import { timer } from 'rxjs';
     MatNativeDateModule,
     FormsModule,],
   template: `
+  <h2>Login</h2>
    <form
       class="login-form"
       autocomplete="off"
@@ -72,7 +75,7 @@ import { timer } from 'rxjs';
 })
 export class LoginComponent {
     ngOnInit(): void {}
-  
+
 logindetails: login = {} as login;
 // ...
   loginenter(){
@@ -117,6 +120,7 @@ logindetails: login = {} as login;
 
   loginForm: any;
 
+  
   constructor(private formBuilder: FormBuilder, private session: sessionService,private logger: logged,private location: Location) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -146,3 +150,4 @@ logindetails: login = {} as login;
     this.formSubmitted.emit(this.loginForm.value as login);
   }
 }
+

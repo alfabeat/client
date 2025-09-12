@@ -25,6 +25,20 @@ import { get } from 'http';
           margin-right: 1rem;
         }
       }
+              .class-card {
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;   
+  width: 100%;
+  background: transparent;
+  box-shadow: none;
+
+        button:first-of-type {
+          margin-right: 1rem;
+        }
+}
+.class-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
     `,
   ],
   template: ` 

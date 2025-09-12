@@ -107,12 +107,12 @@ import { logged } from '../session.service';
       >
         Delete
       </button>   
-        <button
+      <button
         mat-raised-button
         color="primary"
         type="submit"
         [disabled]="memberForm.invalid"
-        (click)="addevent()"
+        (click)="addmember()"
       >
         Add
       </button>  
@@ -147,10 +147,12 @@ export class MemberFormComponent {
   const id = String(this.route.snapshot.paramMap.get('id'));
    
     this.getid(id);
+    this.getid(id);
   }
   getid(id: string) {
     this.membersService.getMember(id).subscribe((response)=>{
-   this.member = response; 
+  // this.member = response; 
+   this.member = Array.isArray(response) ? response[0] : response;
       console.log('Member fetched:', this.member);
       error: (err: any) => {
         console.error('Error fetching member:', err);
@@ -160,18 +162,23 @@ export class MemberFormComponent {
   }
 
 
-  editEvent(id: string | undefined) {
+  editEvent(id: string | number | undefined) {
     // Implement edit member logic here
-
+    if (typeof id === 'number') {
+      id = id.toString();
+          console.log('Converted id to string:', id);
+    }
     this.member.Name = this.Name.value;
     this.member.role = this.role.value; // Default role
     this.member.team = this.team.value; // Default team
     this.member.email = this.email.value;
+    
     if (typeof id === 'string') {
       this.membersService.updateMember(id, this.member).subscribe({
         next: () => {
           console.log('Member updated successfully');
           // this.membersService.getmembers(); // Refresh the member list
+          this.router.navigate(['/member']);
           this.router.navigate(['/member']);
         },
         error: (error) => {
@@ -187,9 +194,27 @@ export class MemberFormComponent {
     }
   }
 
-
-  deleteEvent(id: string | undefined) {
+ addmember() {
+     this.member.Name = this.Name.value;
+    this.member.role = this.role.value; // Default role
+    this.member.team = this.team.value; // Default team
+    this.member.email = this.email.value;
+    this.membersService.addMember( this.member).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        alert('Failed to create member');
+        console.error(error);
+      },
+    });
+ 
+  }
+  deleteEvent(id: string | number | undefined) {
     // Implement delete member logic here
+    if (typeof id === 'number') {
+      id = id.toString();
+    }
       if (typeof id === 'string') {
     this.membersService.deleteMember(id).subscribe({
       next: () => {
@@ -238,7 +263,7 @@ export class MemberFormComponent {
 
   memberForm: any;
 
-  constructor(private formBuilder: FormBuilder,private logger: logged,   private membersService: MemberService,private router: Router) {
+  constructor(private formBuilder: FormBuilder,private logger: logged, private membersService: MemberService,private router: Router) {
     this.memberForm = this.formBuilder.group({
       Name: ['', [Validators.required, Validators.minLength(3)]],
       role: ['member', [Validators.required]],

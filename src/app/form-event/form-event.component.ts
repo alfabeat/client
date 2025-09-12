@@ -156,6 +156,8 @@ eventdata: Event = {} as Event;
     this.eventsService.getevent(id).subscribe((response)=>{
   // this.eventdata = response;
    this.eventdata = Array.isArray(response) ? response[0] : response;
+  // this.eventdata = response;
+   this.eventdata = Array.isArray(response) ? response[0] : response;
       console.log('event fetched:', this.eventdata._id);
       error: (err: any) => {
         console.error('Error fetching member:', err);
@@ -205,6 +207,7 @@ eventdata: Event = {} as Event;
         },
         error: (error) => {
           alert('Failed to update event');
+          alert('Failed to update event');
           console.error(error);
         },
       });
@@ -216,11 +219,13 @@ eventdata: Event = {} as Event;
   }
 
 
+
   deleteEvent(id: string|number | undefined) {
     // Implement delete member logic here
        if (typeof id === 'number') {
       id = id.toString();
     }
+
       if (typeof id === 'string') {
     this.eventsService.deleteevent(id).subscribe({
       next: () => {

@@ -1,6 +1,6 @@
 export interface Member {
       _id?: string;
-  MemberId: string;
+
   Name: string;
   role: 'senior' | 'member';
     email: string;

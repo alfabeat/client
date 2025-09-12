@@ -17,28 +17,13 @@ import { MatCardModule } from '@angular/material/card';
         <app-member-form
          
         ></app-member-form>
+
       </mat-card-content>
     </mat-card>
   `,
   styles: ``
 })
 export class AddMemberComponent {
-  constructor(
-    private router: Router,
-    private memberService: MemberService
-  ) {}
 
-  addmember(member: Member) {
-    this.memberService.addMember(member).subscribe({
-      next: () => {
-        this.router.navigate(['/']);
-      },
-      error: (error) => {
-        alert('Failed to create member');
-        console.error(error);
-      },
-    });
-    this.memberService.getmembers();
-  }
 
 }
