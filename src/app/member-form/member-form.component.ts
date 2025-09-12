@@ -107,6 +107,15 @@ import { logged } from '../session.service';
       >
         Delete
       </button>   
+        <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="memberForm.invalid"
+        (click)="addevent()"
+      >
+        Add
+      </button>  
   `,
   styles: `
     .member-details {
@@ -197,7 +206,24 @@ export class MemberFormComponent {
     console.log('Delete event triggered for:', );
   }
   }
-
+  addevent() {
+    this.member.Name = this.Name.value;
+    this.member.role = this.role.value;
+    this.member.team = this.team.value;
+    this.member.email = this.email.value;
+    this.membersService.addMember(this.member).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+        console.log('Member added successfully');
+        // this.membersService.getmembers(); // Refresh the member list
+      },
+      error: (error) => {
+        alert('Failed to create member');
+        console.error(error);
+      },
+    });
+    console.log('Add event triggered for:', );
+  }
   getEventId() {
     // Implement get member ID logic here
     this.getid("id");
