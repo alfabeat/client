@@ -199,7 +199,7 @@ eventdata: Event = {} as Event;
         next: () => {
           console.log('event updated successfully');
           // this.membersService.getmembers(); // Refresh the member list
-          
+           this.router.navigate(['/event']);
         },
         error: (error) => {
           alert('Failed to update event');
@@ -224,6 +224,7 @@ eventdata: Event = {} as Event;
       next: () => {
         console.log('event delete successfully');
         // this.membersService.getmembers(); // Refresh the member list
+         this.router.navigate(['/event']);
       },
       error: (error) => {
         alert('Failed to delete member');

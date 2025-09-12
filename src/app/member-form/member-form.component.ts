@@ -146,10 +146,7 @@ export class MemberFormComponent {
    }
   const id = String(this.route.snapshot.paramMap.get('id'));
    
-      this.membersService.getMember(id).subscribe((response) => {
-      this.member  = response;
-      console.log('Data fetched:', this.member );
-  });
+    this.getid(id);
   }
   getid(id: string) {
     this.membersService.getMember(id).subscribe((response)=>{
@@ -168,6 +165,7 @@ export class MemberFormComponent {
     // Implement edit member logic here
     if (typeof id === 'number') {
       id = id.toString();
+          console.log('Converted id to string:', id);
     }
     this.member.Name = this.Name.value;
     this.member.role = this.role.value; // Default role
@@ -179,6 +177,7 @@ export class MemberFormComponent {
         next: () => {
           console.log('Member updated successfully');
           // this.membersService.getmembers(); // Refresh the member list
+          this.router.navigate(['/member']);
         },
         error: (error) => {
           alert('Failed to update member');
@@ -211,7 +210,7 @@ export class MemberFormComponent {
   }
   deleteEvent(id: string | number | undefined) {
     // Implement delete member logic here
-        if (typeof id === 'number') {
+    if (typeof id === 'number') {
       id = id.toString();
     }
       if (typeof id === 'string') {
@@ -219,6 +218,7 @@ export class MemberFormComponent {
       next: () => {
         console.log('Member delete successfully');
         // this.membersService.getmembers(); // Refresh the member list
+        this.router.navigate(['/']);
       },
       error: (error) => {
         alert('Failed to delete member');
@@ -244,7 +244,7 @@ export class MemberFormComponent {
 
   memberForm: any;
 
-  constructor(private formBuilder: FormBuilder,private logger: logged,   private membersService: MemberService,private router: Router) {
+  constructor(private formBuilder: FormBuilder,private logger: logged, private membersService: MemberService,private router: Router) {
     this.memberForm = this.formBuilder.group({
       Name: ['', [Validators.required, Validators.minLength(3)]],
       role: ['member', [Validators.required]],
