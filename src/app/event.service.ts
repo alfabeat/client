@@ -7,8 +7,8 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root'
 })
 export class EventService {
-  private url = 'https://rugbyweb.onrender.com/api';
-  //private url = 'http://localhost:3000/api';
+  //private url = 'https://rugbyweb.onrender.com/api';
+  private url = 'http://localhost:3000/api';
   events$ = signal<Event[]>([]);
   event$ = signal<Event>({} as Event);
 

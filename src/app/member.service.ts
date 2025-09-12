@@ -8,8 +8,8 @@ import { Observable, map } from 'rxjs';
 })
 
 export class MemberService {
- private url = 'https://rugbyweb.onrender.com/api';
-// private url = 'http://localhost:3000/api';
+// private url = 'https://rugbyweb.onrender.com/api';
+ private url = 'http://localhost:3000/api';
   members$ = signal<Member[]>([]);
   member$ = signal<Member>({} as Member);
 
