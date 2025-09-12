@@ -108,6 +108,15 @@ import { logged } from '../session.service';
         (click)="deleteEvent(eventdata._id)"
       >
         Delete
+      </button>  
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="EventForm.invalid"
+        (click)="addevent()"
+      >
+        Add
       </button>    
   `,
   styles: `
@@ -153,7 +162,7 @@ eventdata: Event = {} as Event;
       }
     });
   }
- addmember() {
+ addevent() {
     this.eventdata.title = this.title.value;
     this.eventdata.title = this.title.value;
     this.eventdata.description = this.description.value;
@@ -190,6 +199,7 @@ eventdata: Event = {} as Event;
         next: () => {
           console.log('event updated successfully');
           // this.membersService.getmembers(); // Refresh the member list
+          
         },
         error: (error) => {
           alert('Failed to update event');
