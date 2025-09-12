@@ -146,10 +146,7 @@ export class MemberFormComponent {
    }
   const id = String(this.route.snapshot.paramMap.get('id'));
    
-      this.membersService.getMember(id).subscribe((response) => {
-      this.member  = response;
-      console.log('Data fetched:', this.member );
-  });
+    this.getid(id);
   }
   getid(id: string) {
     this.membersService.getMember(id).subscribe((response)=>{
@@ -175,6 +172,7 @@ export class MemberFormComponent {
         next: () => {
           console.log('Member updated successfully');
           // this.membersService.getmembers(); // Refresh the member list
+          this.router.navigate(['/member']);
         },
         error: (error) => {
           alert('Failed to update member');
@@ -197,6 +195,7 @@ export class MemberFormComponent {
       next: () => {
         console.log('Member delete successfully');
         // this.membersService.getmembers(); // Refresh the member list
+        this.router.navigate(['/member']);
       },
       error: (error) => {
         alert('Failed to delete member');
