@@ -43,8 +43,8 @@ export class logged{
 export class sessionService {
 // private url = 'https://rugbyweb.onrender.com/api';
 
- private url = 'http://localhost:3000/api';
-//   private url = 'https://rugbyweb.onrender.com/api';
+ //private url = 'http://localhost:3000/api';
+  private url = 'https://rugbyweb.onrender.com/api';
   token : string = ""
   constructor(private http: HttpClient, private logged: logged) {  }
   gettoken(logindetails: login) {

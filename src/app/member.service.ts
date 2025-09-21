@@ -8,15 +8,15 @@ import { Observable, map } from 'rxjs';
 })
 
 export class MemberService {
-// private url = 'https://rugbyweb.onrender.com/api';
- private url = 'http://localhost:3000/api';
+ private url = 'https://rugbyweb.onrender.com/api';
+// private url = 'http://localhost:3000/api';
   members$ = signal<Member[]>([]);
   member$ = signal<Member>({} as Member);
 
   constructor(private http: HttpClient) {  }
 
   getData():  Observable<any> {
-    return this.http.get<any>('http://localhost:3000/api/members/').pipe(
+    return this.http.get<any>('https://rugbyweb.onrender.com/api/members/').pipe(
      map(response => response.result), // Adjust based on your API response structure
       );
   }

@@ -7,15 +7,15 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root'
 })
 export class EventService {
-  //private url = 'https://rugbyweb.onrender.com/api';
-  private url = 'http://localhost:3000/api';
+  private url = 'https://rugbyweb.onrender.com/api';
+  //private url = 'http://localhost:3000/api';
   events$ = signal<Event[]>([]);
   event$ = signal<Event>({} as Event);
 
   constructor(private http: HttpClient) {  }
 
   getData():  Observable<any> {
-    return this.http.get<any>('http://localhost:3000/api/events/').pipe(
+    return this.http.get<any>('https://rugbyweb.onrender.com/api/events/').pipe(
      map(response => response.result), // Adjust based on your API response structure
       );
   }
