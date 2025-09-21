@@ -1,6 +1,6 @@
 [build]
   command   = "ng build"
-  publish   = "dist/client"   # replace with actual dist folder name
+  publish   = "dist/client/browser"   # replace with actual dist folder name
 
 [functions]
   directory = "netlify/functions"
